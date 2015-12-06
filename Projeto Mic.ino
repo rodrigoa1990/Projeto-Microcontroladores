@@ -8,16 +8,18 @@ rgb_lcd lcd;
 
 
 
-int analogPin3 = 3;
-int analogPin2 = 1;
-int analogPin = 0;
-int Control1 = 3;
-int Control2 = 5;
-int Intensity = 6;
-volatile int inter = 0;
-Stepper stepper(STEPS, 10, 9, 11, 12);
+int analogPin3 = 3; //Sensor de LUZ
+int analogPin2 = 1; // Potenciometro1  
+int analogPin = 0;//Potenciometro 2
+
+int Control1 = 3;// HBridge 1
+int Control2 = 5;//HBridge 2
+int Intensity = 6;//PWM HBridge
+
+volatile int inter = 0;//variavel de interrupcao
+
+Stepper stepper(STEPS, 10, 9, 11, 12);//Stepper
  
-int dir = 0;
 String baixo = "Baixo                   ";
 String cima = "Cima                         ";
 String abrir = "Abrir                   ";
@@ -25,7 +27,7 @@ String fechar = "Fechar                       ";
 String automa = "Automatico                       ";
 
 
-
+//Variaveis Usadas
 int val4 = 0;
 int val =0;
 int val2 = 0;
@@ -33,7 +35,6 @@ int val3 = 0;
 int previous = 0;
 
 void setup() {
-  // initialize the digital pin as an output.
   pinMode(Control1, OUTPUT);
   pinMode(Control2, OUTPUT);
   pinMode(Intensity, OUTPUT);
@@ -42,7 +43,7 @@ void setup() {
   lcd.begin(16, 2);
 }
 
-void Interromper(){
+void Interromper(){ // Interrupcao de 1,2,3
 
   if(inter == 0){
     inter =1;}
