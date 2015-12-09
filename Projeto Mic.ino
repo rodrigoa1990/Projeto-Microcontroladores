@@ -61,8 +61,7 @@ void Interromper(){ // Interrupcao de 1,2,3
 void loop() {
   while(inter == 0){
   val = analogRead(analogPin);
-
- 
+   
   if(val < 611){
    val2= map(val, 0,611,255,0);
    	digitalWrite(Control2, HIGH);
@@ -71,6 +70,8 @@ void loop() {
         lcd.clear();
         lcd.setRGB(0, 100, 0);
         lcd.print(cima);
+        delay(100);
+
 
   }
   else{
@@ -81,16 +82,18 @@ void loop() {
   lcd.clear();
       lcd.setRGB(0, 0, 100);
     lcd.print(baixo);  
+    delay(100);
   }
   }
   while(inter == 2){
+           digitalWrite(Control2, LOW);
+  digitalWrite(Control1, LOW);
       lcd.clear();
-      lcd.setRGB(0, 0, 100);
+      lcd.setRGB(100, 100, 100);
     lcd.print(automa);   
    val4 = analogRead(analogPin3);
-   val3 = map(val4, 0 ,781, 0, 500);
+   val3 = map(val4, 0 ,781, 0, 200);
    stepper.step(val3- previous);
-   Serial.println(val3);
    previous = val3;
 
    
@@ -103,21 +106,24 @@ void loop() {
   digitalWrite(Control1, LOW);
     
     val3 = analogRead(analogPin2); 
-    val4 = map(val3,0,1023,0,500);
-    stepper.step(val4- previous);
+    val4 = map(val3,0,1023,0,200);
     val2 = val4- previous;
-    previous = val4;
-    
      if(val2 >= 0){
         lcd.clear();
-      lcd.setRGB(0, 0, 100);
+      lcd.setRGB(100, 0, 0);
     lcd.print(abrir);        
       }
       else{
       lcd.clear();
       lcd.setRGB(0, 0, 100);
     lcd.print(fechar);  
-      }   
+      } 
+      delay(10);
+    
+    stepper.step(val4- previous);
+    
+    previous = val4;
+    
+      
   }
   
-}
