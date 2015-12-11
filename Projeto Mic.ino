@@ -27,7 +27,7 @@ String fechar = "Fechar                       ";
 String automa = "Automatico                       ";
 
 
-//Variaveis Usadas
+//Variaveis Usadas no controle do motor de passo
 int val4 = 0;
 int val =0;
 int val2 = 0;
@@ -43,7 +43,7 @@ void setup() {
   lcd.begin(16, 2);
 }
 
-void Interromper(){ // Interrupcao de 1,2,3
+void Interromper(){ //Interrupção que alterna entre os modos 1, 2 e 3
 
   if(inter == 0){
     inter =1;}
@@ -59,71 +59,67 @@ void Interromper(){ // Interrupcao de 1,2,3
   }
 
 void loop() {
-  while(inter == 0){
-  val = analogRead(analogPin);
-   
-  if(val < 611){
-   val2= map(val, 0,611,255,0);
-   	digitalWrite(Control2, HIGH);
-  	digitalWrite(Control1, LOW);
-        analogWrite(Intensity,val2);
-        lcd.clear();
-        lcd.setRGB(0, 100, 0);
-        lcd.print(cima);
-        delay(100);
-
-
-  }
-  else{
-   val2= map(val,611,1023,0,255);
-   digitalWrite(Control2, LOW);
-  digitalWrite(Control1, HIGH);
-  analogWrite(Intensity,val2);
-  lcd.clear();
-      lcd.setRGB(0, 0, 100);
-    lcd.print(baixo);  
-    delay(100);
-  }
-  }
-  while(inter == 2){
-           digitalWrite(Control2, LOW);
-  digitalWrite(Control1, LOW);
-      lcd.clear();
-      lcd.setRGB(100, 100, 100);
-    lcd.print(automa);   
-   val4 = analogRead(analogPin3);
-   val3 = map(val4, 0 ,781, 0, 200);
-   stepper.step(val3- previous);
-   previous = val3;
-
-   
-   
-
-  delay(1000);
-  }
-  while(inter == 1){
+   //Modo 1 - Altura da persiana
+   while(inter == 0){
+     val = analogRead(analogPin);
+     if(val < 611){
+       val2= map(val, 0,611,255,0);
+   	   digitalWrite(Control2, HIGH);
+  	    digitalWrite(Control1, LOW);
+       analogWrite(Intensity,val2);
+       lcd.clear();
+       lcd.setRGB(0, 100, 0);
+       lcd.print(cima);
+       delay(100);
+     }
+     else{
+       val2= map(val,611,1023,0,255);
        digitalWrite(Control2, LOW);
-  digitalWrite(Control1, LOW);
-    
-    val3 = analogRead(analogPin2); 
-    val4 = map(val3,0,1023,0,200);
-    val2 = val4- previous;
+       digitalWrite(Control1, HIGH);
+       analogWrite(Intensity,val2);
+       lcd.clear();
+       lcd.setRGB(0, 0, 100);
+       lcd.print(baixo);  
+       delay(100);
+     }
+   }
+  
+   //Modo 2 - Abertura da persiana
+   while(inter == 1){
+     digitalWrite(Control2, LOW);
+     digitalWrite(Control1, LOW);
+     val3 = analogRead(analogPin2); 
+     val4 = map(val3,0,1023,0,200);
+     val2 = val4- previous;
      if(val2 >= 0){
-        lcd.clear();
-      lcd.setRGB(100, 0, 0);
-    lcd.print(abrir);        
-      }
-      else{
-      lcd.clear();
-      lcd.setRGB(0, 0, 100);
-    lcd.print(fechar);  
-      } 
-      delay(10);
-    
-    stepper.step(val4- previous);
-    
-    previous = val4;
+       lcd.clear();
+       lcd.setRGB(100, 0, 0);
+       lcd.print(abrir);        
+     }
+     else{
+       lcd.clear();
+       lcd.setRGB(0, 0, 100);
+       lcd.print(fechar);  
+     } 
+     delay(10);
+     stepper.step(val4- previous);
+     previous = val4;
     
       
-  }
+   }
+   
+   //Modo 3 - Automático
+   while(inter == 2){
+     digitalWrite(Control2, LOW);
+     digitalWrite(Control1, LOW);
+     lcd.clear();
+     lcd.setRGB(100, 100, 100);
+     lcd.print(automa);   
+     val4 = analogRead(analogPin3); //Leitura do valor do sensor de luminosidade
+     val3 = map(val4, 0 ,781, 0, 200);
+     stepper.step(val3- previous);
+     previous = val3;
+     delay(1000);
+   }
   
+}
